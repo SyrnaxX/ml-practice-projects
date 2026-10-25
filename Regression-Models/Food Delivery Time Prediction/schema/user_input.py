@@ -4,16 +4,16 @@ import json
 from datetime import datetime
 class userInput(BaseModel):
     # ....schema...
-    Distance : Annotated[float,Field(...,description='Enter distance in km',examples=[12.3,5.6])]
+    Road_Distance_km : Annotated[float,Field(...,description='Enter distance in km',examples=[12.3,5.6])]
     No_of_signals : Annotated[int,Field(...,description='Enter numbetr of signals.',examples=[1,3,5])]
-    Rider_Rating : Annotated[int,Field(...,description='Enter rider rating',examples=[4.5,3.2])]
+    Rider_Rating : Annotated[float,Field(...,description='Enter rider rating',examples=[4.5,3.2])]
     Cuisine_Type : Annotated[Literal['Pizza','Desserts','Biryani','Burger','South Indian','Bakery',
                                      'North Indian','Cafe','Chinese'],Field(...,description=('Enter Cusine type')
                                     ,examples=['North Indian','Biryani','Bakery'])]
-    Traffic_Level: Annotated[Literal['Moderate', 'Low', 'High', 'Severe'],Field(...,
-                                    description='Traffic level',examples=['High','Low','Severe'])]
-    Weekend : Annotated[bool,Field(...,description='is Weekend',examples=['True','False'])]
-    Festival :Annotated[bool,Field(...,description='is festival',examples=['True','False'])]
+    No_of_signals: Annotated[int,Field(...,
+                                    description='Enter number of signals',examples=[3,7,8])]
+    Is_Weekend : Annotated[bool,Field(...,description='is Weekend',examples=['True','False'])]
+    Is_Festival :Annotated[bool,Field(...,description='is festival',examples=['True','False'])]
     Order_Items : Annotated[int,Field(...,description='No of order items',examples=[1,2])]
     Order_Hour : Annotated[str,Field(...,description='Time of order',examples=["2:45 PM","8:09 PM","11:11 AM"])]
     Weather : Annotated[Literal['Clear', 'Rain', 'Cloudy', 'Storm', 'Fog'],
@@ -24,19 +24,23 @@ class userInput(BaseModel):
                              Field(...,description="Dropoff Zone",examples=['Commercial','Residential'])]
     Vehicle_Type : Annotated[Literal['Scooter', 'Bike', 'Electric Scooter', 'Bicycle'],
                              Field(...,description='Enter Vehicle_Type',examples=['Bike','Electric Scooter'])]
+    Traffic_Level : Annotated[Literal['Moderate', 'Low', 'High', 'Severe'],Field(...,description="Enter Traffic Level.",
+                                                                                 examples=['Moderate','High'])]
     ## computed field...
     @computed_field
     @property
     def Delivery_Distance_Category(self) -> str:
-        if self.distance < 2:
+        if self.Road_Distance_km < 2:
             return "Short"
-        elif self.distance < 7:
+        elif self.Road_Distance_km < 7:
             return 'Medium'
         return 'Long'
     @computed_field
     @property
     def Time_period(self)-> str: 
-        time_obj = datetime.strptime(self.Order_hour,"%I:%M%p") # ex:  2:45 PM
+        if self.Order_Hour is None:
+            return "Unknown"
+        time_obj = datetime.strptime(self.Order_Hour,"%I:%M%p") # ex:  2:45 PM
         hour = time_obj.hour
         # convert to Time_period
         if 6<= hour <12:
@@ -46,3 +50,10 @@ class userInput(BaseModel):
         elif 16 <= hour<21:
             return 'Evening'
         return 'Night'
+    @field_validator('Order_Hour')
+    @classmethod
+    def uppercase(cls,v:str)->str:
+        v = v.strip().capitalize()
+
+
+    

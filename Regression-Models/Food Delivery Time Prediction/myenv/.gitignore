@@ -1,0 +1,33 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+# 1. Virtual Environments (Never commit these!)
+myenv/
+venv/
+env/
+ENV/
+
+# 2. Python Cache Files
+_pycache_/
+*.py[cod]
+*$py.class
+
+# 3. Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# 4. Large Data Files (Optional but recommended)
+# If your CSV is huge, ignore it. If it's small, you can keep it.
+datasets/
+*.csv
+
+# 5. Machine Learning Model Files
+# Pickle and Joblib files can get large. 
+# (See note below about whether to ignore this or not)
+*.pkl
+*.joblib
+xgb_model
+
+# 6. Environment Variables (For future API keys/passwords)
+.env
+
+# 7. OS Specific Files
+.DS_Store
+Thumbs.db

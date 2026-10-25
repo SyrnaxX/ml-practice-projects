@@ -5,3 +5,5 @@ joblib
 xgboost
 scikit-learn==1.8.0
 uvicorn[standard]
+streamlit
+requests
