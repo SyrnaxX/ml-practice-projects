@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
+<<<<<<< Updated upstream
 import os
 
 # 1. Basic Page Setup
@@ -10,9 +11,13 @@ st.set_page_config(page_title="Car Price Predictor", page_icon="🚗", layout="c
 @st.cache_data
 def load_data():
     return pd.read_csv('Cleaned car data.csv')
+=======
+>>>>>>> Stashed changes
 
+# 1. Load Model and Data
 @st.cache_resource
 def load_model():
+<<<<<<< Updated upstream
     # Make sure this filename matches your saved model exactly!
     return joblib.load('car_price_dt_model.pkl')
 
@@ -73,3 +78,53 @@ if st.button("🔍 Predict Price", use_container_width=True, type="primary"):
         st.success(f"### 💰 Estimated Selling Price: ₹{prediction:,.2f}")
     except Exception as e:
         st.error(f"️ Error: The model couldn't predict. This usually means the column names in the code don't match your training data. Details: {e}")
+=======
+    return joblib.load('car_price_prediction_model_dt.pkl')
+
+@st.cache_data
+def load_data():
+    return pd.read_csv('Cleaned car data.csv')
+
+model = load_model()
+df = load_data()
+
+# 2. UI
+st.title("🚗 Car Price Prediction")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    name = st.selectbox("Car Name", sorted(df['name'].unique()))
+    fuel = st.selectbox("Fuel", sorted(df['fuel'].unique()))
+    transmission = st.selectbox("Transmission", sorted(df['transmission'].unique()))
+    owner = st.selectbox("Owner", sorted(df['owner'].unique()))
+    seller_type = st.selectbox("Seller Type", sorted(df['seller_type'].unique()))
+
+with col2:
+    km_driven = st.number_input("KM Driven", value=10000)
+    car_age = st.number_input("Car Age (Years)", value=5)
+    mileage = st.number_input("Mileage", value=20.0)
+    engine = st.number_input("Engine (CC)", value=1200)
+    max_power = st.number_input("Max Power (BHP)", value=80)
+    seats = st.number_input("Seats", value=5)
+
+# 3. Prediction
+if st.button("Predict Price"):
+    
+    input_data = pd.DataFrame([{
+        'name': name,
+        'km_driven': km_driven,
+        'fuel': fuel,
+        'seller_type': seller_type,
+        'transmission': transmission,
+        'owner': owner,
+        'mileage(km/ltr/kg)': mileage, 
+        'engine': engine,
+        'max_power': max_power,
+        'seats': seats,
+        'car_age': car_age
+    }])
+
+    prediction = model.predict(input_data)[0]
+    st.success(f"Predicted Price: ₹ {prediction:,.2f}")
+>>>>>>> Stashed changes
